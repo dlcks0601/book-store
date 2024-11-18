@@ -1,4 +1,4 @@
 export interface Pagination {
+  totalBooks: number;
   currentPage: number;
-  totalCount: 0;
 }

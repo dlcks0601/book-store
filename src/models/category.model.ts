@@ -1,4 +1,5 @@
 export interface Category {
-  category_id: number | null;
-  category_name: string;
+  categoryId: number | null; // 전체 카테고리를 null로 설정함
+  categoryName: string;
+  isActive?: boolean;
 }

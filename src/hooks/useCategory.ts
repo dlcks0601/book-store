@@ -1,22 +1,58 @@
 import { useEffect, useState } from 'react';
-import { fetchCategory } from '../api/category.api';
 import { Category } from '../models/category.model';
+import { fetchCategory } from '../api/category.api';
+import { useLocation } from 'react-router-dom';
+import { QUERYSTRING } from '../constants/querystring';
 
 export const useCategory = () => {
   const [category, setCategory] = useState<Category[]>([]);
+  const location = useLocation();
+  // category에 isActive 필드를 추가해줌
+  const setActive = () => {
+    const params = new URLSearchParams(location.search);
+    const categoryId = params.get(QUERYSTRING.CATEGORY_ID);
+    if (categoryId) {
+      setCategory((prev) => {
+        return prev.map((category) => {
+          return {
+            ...category,
+            isActive: category.categoryId === Number(categoryId),
+          };
+        });
+      });
+    } else {
+      // category_id === null 일 경우
+      setCategory((prev) => {
+        return prev.map((category) => {
+          return {
+            ...category,
+            isActive: false,
+          };
+        });
+      });
+    }
+  };
 
+  // 1. 안에서 비동기 작업 실행
   useEffect(() => {
     fetchCategory().then((category) => {
-      if (!category) return;
-
+      if (!category.length || !category) return;
       const categoryWithAll = [
-        { category_id: null, category_name: '전체' },
+        {
+          categoryId: null,
+          categoryName: '전체',
+        },
         ...category,
       ];
-
       setCategory(categoryWithAll);
+      setActive();
     });
   }, []);
 
-  return { category };
+  // 2. 안에서 동기 작업 실행
+  useEffect(() => {
+    setActive();
+  }, [location]);
+
+  return category;
 };
