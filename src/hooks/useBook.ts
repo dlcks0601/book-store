@@ -1,25 +1,26 @@
-import { useEffect, useState } from 'react';
 import { BookDetail } from '../models/book.model';
-import { fetchBook, likeBook, unlikeBook } from '../api/books.api';
-import { useAlert } from './useAlert';
+import { useEffect, useState } from 'react';
+import { fetchBook, likeBook, unLikeBook } from '../api/books.api';
 import { useAuthStore } from '../store/authStore';
+import { useAlert } from './useAlert';
 import { addCart } from '../api/carts.api';
 
 export const useBook = (bookId: string | undefined) => {
   const [book, setBook] = useState<BookDetail | null>(null);
-  const { isloggedIn } = useAuthStore();
-  const showAlert = useAlert();
+  const { isLoggedIn } = useAuthStore();
   const [cartAdded, setCartAdded] = useState(false);
+  const showAlert = useAlert();
 
   const likeToggle = () => {
-    if (!book) return;
-    if (!isloggedIn) {
+    if (!isLoggedIn) {
       showAlert('로그인이 필요합니다.');
       return;
     }
+
+    if (!book) return;
+
     if (book.liked) {
-      // 라이크 상태 -> 언라이크 실행
-      unlikeBook(book.id).then(() => {
+      unLikeBook(book.id).then(() => {
         setBook({
           ...book,
           liked: false,
@@ -27,7 +28,7 @@ export const useBook = (bookId: string | undefined) => {
         });
       });
     } else {
-      // 언라이크 상태 -> 라이크 실행
+      // 낙관적 업데이트 ??
       likeBook(book.id).then(() => {
         setBook({
           ...book,
@@ -37,18 +38,18 @@ export const useBook = (bookId: string | undefined) => {
       });
     }
   };
-
   const addToCart = (quantity: number) => {
     if (!book) return;
 
     addCart({
-      bookId: book.id,
+      book_id: book.id,
       quantity: quantity,
     }).then(() => {
+      // showAlert("장바구니에 추가되었습니다.");
       setCartAdded(true);
       setTimeout(() => {
         setCartAdded(false);
-      }, 3000);
+      }, 5000);
     });
   };
 

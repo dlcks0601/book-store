@@ -1,24 +1,25 @@
+import { httpClient } from './http';
 import { Book, BookDetail } from '../models/book.model';
 import { Pagination } from '../models/pagination.model';
-import { httpClient } from './http';
 
-interface FetchBookParams {
+interface IFetchBooksParams {
   category_id?: number;
-  news?: boolean; // false | null
+  news?: boolean;
   currentPage?: number;
   limit: number;
 }
 
-interface FetchBooksResponse {
+interface IFetchBooksResponse {
   books: Book[];
   pagination: Pagination;
 }
 
-export const fetchBooks = async (params: FetchBookParams) => {
+export const fetchBooks = async (params: IFetchBooksParams) => {
   try {
-    const response = await httpClient.get<FetchBooksResponse>('/books', {
-      params,
+    const response = await httpClient.get<IFetchBooksResponse>('/books', {
+      params: params,
     });
+
     return response.data;
   } catch (error) {
     return {
@@ -38,11 +39,10 @@ export const fetchBook = async (bookId: string) => {
 
 export const likeBook = async (bookId: number) => {
   const response = await httpClient.post(`/likes/${bookId}`);
-  console.log(response);
   return response.data;
 };
 
-export const unlikeBook = async (bookId: number) => {
+export const unLikeBook = async (bookId: number) => {
   const response = await httpClient.delete(`/likes/${bookId}`);
   return response.data;
 };

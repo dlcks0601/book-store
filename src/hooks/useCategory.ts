@@ -2,30 +2,28 @@ import { useEffect, useState } from 'react';
 import { Category } from '../models/category.model';
 import { fetchCategory } from '../api/category.api';
 import { useLocation } from 'react-router-dom';
-import { QUERYSTRING } from '../constants/querystring';
 
 export const useCategory = () => {
-  const [category, setCategory] = useState<Category[]>([]);
   const location = useLocation();
-  // category에 isActive 필드를 추가해줌
+  const [category, setCategory] = useState<Category[]>([]);
+
   const setActive = () => {
     const params = new URLSearchParams(location.search);
-    const categoryId = params.get(QUERYSTRING.CATEGORY_ID);
-    if (categoryId) {
-      setCategory((prev) => {
-        return prev.map((category) => {
+
+    if (params.get('category_id')) {
+      setCategory((prevState) => {
+        return prevState.map((item) => {
           return {
-            ...category,
-            isActive: category.categoryId === Number(categoryId),
+            ...item,
+            isActive: item.category_id === Number(params.get('category_id')),
           };
         });
       });
     } else {
-      // category_id === null 일 경우
-      setCategory((prev) => {
-        return prev.map((category) => {
+      setCategory((prevState) => {
+        return prevState.map((item) => {
           return {
-            ...category,
+            ...item,
             isActive: false,
           };
         });
@@ -33,26 +31,26 @@ export const useCategory = () => {
     }
   };
 
-  // 1. 안에서 비동기 작업 실행
   useEffect(() => {
-    fetchCategory().then((category) => {
-      if (!category.length || !category) return;
+    fetchCategory().then((category: Category[]) => {
+      if (!category) return;
+
       const categoryWithAll = [
         {
-          categoryId: null,
-          categoryName: '전체',
+          category_id: null,
+          category_name: '전체',
         },
         ...category,
       ];
+
       setCategory(categoryWithAll);
       setActive();
     });
   }, []);
 
-  // 2. 안에서 동기 작업 실행
   useEffect(() => {
     setActive();
-  }, [location]);
+  }, [location.search]);
 
-  return category;
+  return { category };
 };

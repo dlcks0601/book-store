@@ -1,30 +1,30 @@
-import { styled } from 'styled-components';
+import React from 'react';
+import styled from 'styled-components';
 import { Book } from '../../models/book.model';
-import { FC } from 'react';
-import { getImgSrc } from '../../utils/image';
+import { getImgSrc } from '../../utils/images';
 import { formatNumber } from '../../utils/format';
 import { FaHeart } from 'react-icons/fa';
 import { ViewMode } from './BooksViewSwitcher';
 import { Link } from 'react-router-dom';
 
-interface Props {
+interface IBookItemProps {
   book: Book;
   view?: ViewMode;
 }
 
-const BookItem: FC<Props> = ({ book, view }) => {
+const BookItem: React.FC<IBookItemProps> = ({ book, view }) => {
   return (
     <BookItemStyle view={view}>
-      <Link to={`/books/${book.id}`}>
-        <div className='img'>
+      <Link to={`/book/${book.id}`}>
+        <div className={'img'}>
           <img src={getImgSrc(book.img)} alt={book.title} />
         </div>
-        <div className='content'>
-          <h2 className='title'>{book.title}</h2>
-          <p className='summary'>{book.summary}</p>
-          <p className='author'>{book.author}</p>
-          <p className='price'>{formatNumber(book.price)}원</p>
-          <div className='likes'>
+        <div className={'content'}>
+          <h2 className={'title'}>{book.title}</h2>
+          <p className={'summary'}>{book.summary}</p>
+          <p className={'author'}>{book.author}</p>
+          <p className={'price'}>{formatNumber(book.price)}원</p>
+          <div className={'likes'}>
             <FaHeart />
             <span>{book.likes}</span>
           </div>
@@ -34,10 +34,10 @@ const BookItem: FC<Props> = ({ book, view }) => {
   );
 };
 
-const BookItemStyle = styled.div<Pick<Props, 'view'>>`
+const BookItemStyle = styled.div<Pick<IBookItemProps, 'view'>>`
   a {
     display: flex;
-    flex-direction: ${({ view }) => (view === 'grid' ? 'column' : 'low')};
+    flex-direction: ${({ view }) => (view === 'grid' ? 'column' : 'row')};
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
     text-decoration: none;
   }
@@ -50,6 +50,7 @@ const BookItemStyle = styled.div<Pick<Props, 'view'>>`
       max-width: 100%;
     }
   }
+
   .content {
     padding: 16px;
     position: relative;
@@ -60,16 +61,19 @@ const BookItemStyle = styled.div<Pick<Props, 'view'>>`
       font-weight: 700;
       margin: 0 0 12px 0;
     }
+
     .summary {
       font-size: 0.875rem;
       color: ${({ theme }) => theme.color.secondary};
       margin: 0 0 4px 0;
     }
+
     .author {
       font-size: 0.875rem;
       color: ${({ theme }) => theme.color.secondary};
       margin: 0 0 4px 0;
     }
+
     .price {
       font-size: 1rem;
       color: ${({ theme }) => theme.color.secondary};
@@ -80,16 +84,16 @@ const BookItemStyle = styled.div<Pick<Props, 'view'>>`
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
+      font-size: 0.875rem;
       color: ${({ theme }) => theme.color.primary};
+      margin: 0 0 4px 0;
+      font-weight: 700;
       border: 1px solid ${({ theme }) => theme.color.border};
       border-radius: ${({ theme }) => theme.borderRadius.default};
       padding: 4px 12px;
-      margin: 0 0 4px 0;
-      font-size: 0.875rem;
-      font-weight: 700;
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
 
       svg {
         color: ${({ theme }) => theme.color.primary};

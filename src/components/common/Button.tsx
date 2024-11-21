@@ -1,8 +1,8 @@
+import React from 'react';
 import { styled } from 'styled-components';
 import { ButtonScheme, ButtonSize } from '../../style/theme';
-import { ButtonHTMLAttributes } from 'react';
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   size: ButtonSize;
   scheme: ButtonScheme;
@@ -10,14 +10,14 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
 }
 
-const Button: React.FC<Props> = ({
+const Button: React.FC<IButtonProps> = ({
   children,
   size,
   scheme,
   disabled,
   isLoading,
   ...props
-}) => {
+}: IButtonProps) => {
   return (
     <ButtonStyle
       size={size}
@@ -31,7 +31,7 @@ const Button: React.FC<Props> = ({
   );
 };
 
-const ButtonStyle = styled.button<Omit<Props, 'children'>>`
+const ButtonStyle = styled.button<Omit<IButtonProps, 'children'>>`
   font-size: ${({ theme, size }) => theme.button[size].fontSize};
   padding: ${({ theme, size }) => theme.button[size].padding};
   color: ${({ theme, scheme }) => theme.buttonScheme[scheme].color};
@@ -39,9 +39,9 @@ const ButtonStyle = styled.button<Omit<Props, 'children'>>`
     theme.buttonScheme[scheme].backgroundColor};
   border: 0;
   border-radius: ${({ theme }) => theme.borderRadius.default};
-  opacity: ${({ disabled = false }) => (disabled ? 0.5 : 1)};
-  pointer-events: ${({ disabled = false }) => (disabled ? 'none' : 'auto')};
-  cursor: ${({ disabled = false }) => (disabled ? 'none' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'autoå')};
+  cursor: ${({ disabled }) => (disabled ? 'none' : 'pointer')};
 `;
 
 export default Button;

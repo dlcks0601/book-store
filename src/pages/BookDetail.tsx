@@ -1,11 +1,11 @@
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
+import { Link, useParams } from 'react-router-dom';
 import { useBook } from '../hooks/useBook';
-import { getImgSrc } from '../utils/image';
+import { getImgSrc } from '../utils/images';
 import Title from '../components/common/Title';
 import { BookDetail as IBookDetail } from '../models/book.model';
 import { formatDate, formatNumber } from '../utils/format';
-import { Link } from 'react-router-dom';
 import EllipsisBox from '../components/common/EllipsisBox';
 import LikeButton from '../components/book/LikeButton';
 import AddToCart from '../components/book/AddToCart';
@@ -13,11 +13,11 @@ import AddToCart from '../components/book/AddToCart';
 const bookInfoList = [
   {
     label: '카테고리',
-    key: 'category_id',
+    key: 'category_name',
     filter: (book: IBookDetail) => {
       return (
         <Link to={`/books?category_id=${book.category_id}`}>
-          {book.categoryName}
+          {book.category_name}
         </Link>
       );
     },
@@ -25,10 +25,6 @@ const bookInfoList = [
   {
     label: '포맷',
     key: 'form',
-  },
-  {
-    label: '저자',
-    key: 'author',
   },
   {
     label: '페이지',
@@ -40,9 +36,9 @@ const bookInfoList = [
   },
   {
     label: '출간일',
-    key: 'pubDate',
+    key: 'pub_date',
     filter: (book: IBookDetail) => {
-      return formatDate(book.pubDate);
+      return formatDate(book.pub_date);
     },
   },
   {
@@ -62,42 +58,41 @@ const BookDetail = () => {
 
   return (
     <BookDetailStyle>
-      <header className='header'>
-        <div className='img'>
-          <img src={getImgSrc(book.id)} alt={book.title} />
+      <header className={'header'}>
+        <div className={'img'}>
+          <img src={getImgSrc(book.img)} alt={book.title} />
         </div>
-        <div className='info'>
-          <Title size='large' color='text'>
+        <div className={'info'}>
+          <Title size={'large'} color={'text'}>
             {book.title}
           </Title>
-          {bookInfoList.map((item) => (
+          {bookInfoList.map((info) => (
             <dl>
-              <dt>{item.label}</dt>
+              <dt>{info.label}</dt>
               <dd>
-                {item.filter
-                  ? item.filter(book)
-                  : book[item.key as keyof IBookDetail]}
+                {info.filter
+                  ? info.filter(book)
+                  : book[info.key as keyof IBookDetail]}
               </dd>
             </dl>
           ))}
-          <p className='summary'>{book.summary}</p>
-          <div className='like'>
+          <p className={'summary'}>{book.summary}</p>
+
+          <div className={'like'}>
             <LikeButton book={book} onClick={likeToggle} />
           </div>
-          <div className='add-cart'>
+
+          <div className={'add-cart'}>
             <AddToCart book={book} />
           </div>
         </div>
       </header>
-      <div className='content'>
-        <Title size='medium' color='primary'>
-          상세 설명
-        </Title>
+      <div className={'content'}>
+        <Title size={'medium'}>상세 설명</Title>
         <EllipsisBox linelimit={4}>{book.detail}</EllipsisBox>
-        <Title size='medium' color='primary'>
-          목차
-        </Title>
-        <EllipsisBox linelimit={4}>{book.contents}</EllipsisBox>
+
+        <Title size={'medium'}>목차</Title>
+        <p className={'index'}>{book.contents}</p>
       </div>
     </BookDetailStyle>
   );
@@ -117,24 +112,34 @@ const BookDetailStyle = styled.div`
         height: auto;
       }
     }
+
+    .info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      dl {
+        display: flex;
+        margin: 0;
+        dt {
+          width: 80px;
+          color: ${({ theme }) => theme.color.secondary};
+        }
+        a {
+          color: ${({ theme }) => theme.color.primary};
+        }
+      }
+    }
   }
 
-  .info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    dl {
-      display: flex;
-      margin: 0;
-      dt {
-        width: 80px;
-        color: ${({ theme }) => theme.color.secondary};
-      }
-      a {
-        color: ${({ theme }) => theme.color.primary};
-      }
+  .content {
+    .detail {
+      height: 200px;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
     }
   }
 `;

@@ -1,7 +1,7 @@
+import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Book } from '../models/book.model';
 import { Pagination } from '../models/pagination.model';
-import { useLocation } from 'react-router-dom';
 import { fetchBooks } from '../api/books.api';
 import { QUERYSTRING } from '../constants/querystring';
 import { LIMIT } from '../constants/pagination';
@@ -18,6 +18,7 @@ export const useBooks = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+
     fetchBooks({
       category_id: params.get(QUERYSTRING.CATEGORY_ID)
         ? Number(params.get(QUERYSTRING.CATEGORY_ID))
@@ -25,7 +26,7 @@ export const useBooks = () => {
       news: params.get(QUERYSTRING.NEWS) ? true : undefined,
       currentPage: params.get(QUERYSTRING.PAGE)
         ? Number(params.get(QUERYSTRING.PAGE))
-        : undefined,
+        : 1,
       limit: LIMIT,
     }).then(({ books, pagination }) => {
       setBooks(books);
