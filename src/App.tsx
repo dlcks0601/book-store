@@ -9,7 +9,7 @@ import ResetPassword from './pages/ResetPassword';
 import Login from './pages/Login';
 import Books from './pages/Books';
 import BookDetail from './pages/BookDetail';
-// import Cart from './pages/Cart';
+import Cart from './pages/Cart';
 
 const router = createBrowserRouter([
   {
@@ -61,14 +61,14 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
-  // {
-  //   path: '/cart',
-  //   element: (
-  //     <Layout>
-  //       <Cart />
-  //     </Layout>
-  //   ),
-  // },
+  {
+    path: '/cart',
+    element: (
+      <Layout>
+        <Cart />
+      </Layout>
+    ),
+  },
 ]);
 
 function App() {

@@ -16,6 +16,20 @@ export const createClient = (config?: AxiosRequestConfig) => {
     ...config,
   });
 
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      const accessToken = getToken();
+      if (accessToken) {
+        config.headers['Authorization'] = `${accessToken}`;
+      }
+      return config;
+    },
+    (error) => {
+      console.log(error);
+      Promise.reject(error);
+    }
+  );
+
   axiosInstance.interceptors.response.use(
     (response) => {
       return response;
@@ -25,6 +39,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
       if (error.response.status === 401) {
         removeToken();
         window.location.href = '/login';
+        return;
       }
       return Promise.reject(error);
     }
@@ -33,4 +48,33 @@ export const createClient = (config?: AxiosRequestConfig) => {
   return axiosInstance;
 };
 
-export const httpClient = createClient({});
+export const httpClient = createClient();
+
+// 공통 요청 부분
+
+type RequestMethod = 'get' | 'post' | 'put' | 'delete';
+
+export const requestHandler = async <R = undefined, T = undefined>(
+  method: RequestMethod,
+  url: string,
+  payload?: T
+) => {
+  let response;
+
+  switch (method) {
+    case 'post':
+      response = await httpClient.post<R>(url, payload);
+      break;
+    case 'get':
+      response = await httpClient.get<R>(url);
+      break;
+    case 'put':
+      response = await httpClient.put<R>(url, payload);
+      break;
+    case 'delete':
+      response = await httpClient.delete<R>(url);
+      break;
+  }
+
+  return response.data;
+};

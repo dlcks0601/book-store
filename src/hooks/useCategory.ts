@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Category } from '../models/category.model';
 import { fetchCategory } from '../api/category.api';
+import { Category } from '../models/category.model';
 import { useLocation } from 'react-router-dom';
 
 export const useCategory = () => {
@@ -9,10 +9,9 @@ export const useCategory = () => {
 
   const setActive = () => {
     const params = new URLSearchParams(location.search);
-
     if (params.get('category_id')) {
-      setCategory((prevState) => {
-        return prevState.map((item) => {
+      setCategory((prev) => {
+        return prev.map((item) => {
           return {
             ...item,
             isActive: item.category_id === Number(params.get('category_id')),
@@ -20,8 +19,8 @@ export const useCategory = () => {
         });
       });
     } else {
-      setCategory((prevState) => {
-        return prevState.map((item) => {
+      setCategory((prev) => {
+        return prev.map((item) => {
           return {
             ...item,
             isActive: false,
@@ -32,7 +31,7 @@ export const useCategory = () => {
   };
 
   useEffect(() => {
-    fetchCategory().then((category: Category[]) => {
+    fetchCategory().then((category) => {
       if (!category) return;
 
       const categoryWithAll = [
