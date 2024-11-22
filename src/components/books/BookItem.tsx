@@ -7,24 +7,24 @@ import { FaHeart } from 'react-icons/fa';
 import { ViewMode } from './BooksViewSwitcher';
 import { Link } from 'react-router-dom';
 
-interface IBookItemProps {
+interface Props {
   book: Book;
   view?: ViewMode;
 }
 
-const BookItem: React.FC<IBookItemProps> = ({ book, view }) => {
+function BookItem({ book, view }: Props) {
   return (
     <BookItemStyle view={view}>
       <Link to={`/book/${book.id}`}>
-        <div className={'img'}>
+        <div className='img'>
           <img src={getImgSrc(book.img)} alt={book.title} />
         </div>
-        <div className={'content'}>
-          <h2 className={'title'}>{book.title}</h2>
-          <p className={'summary'}>{book.summary}</p>
-          <p className={'author'}>{book.author}</p>
-          <p className={'price'}>{formatNumber(book.price)}원</p>
-          <div className={'likes'}>
+        <div className='content'>
+          <h2 className='title'>{book.title}</h2>
+          <p className='summary'>{book.summary}</p>
+          <p className='author'>{book.author}</p>
+          <p className='price'>{formatNumber(book.price)}원</p>
+          <div className='likes'>
             <FaHeart />
             <span>{book.likes}</span>
           </div>
@@ -32,9 +32,9 @@ const BookItem: React.FC<IBookItemProps> = ({ book, view }) => {
       </Link>
     </BookItemStyle>
   );
-};
+}
 
-const BookItemStyle = styled.div<Pick<IBookItemProps, 'view'>>`
+export const BookItemStyle = styled.div<Pick<Props, 'view'>>`
   a {
     display: flex;
     flex-direction: ${({ view }) => (view === 'grid' ? 'column' : 'row')};
@@ -61,19 +61,16 @@ const BookItemStyle = styled.div<Pick<IBookItemProps, 'view'>>`
       font-weight: 700;
       margin: 0 0 12px 0;
     }
-
     .summary {
       font-size: 0.875rem;
       color: ${({ theme }) => theme.color.secondary};
       margin: 0 0 4px 0;
     }
-
     .author {
       font-size: 0.875rem;
       color: ${({ theme }) => theme.color.secondary};
       margin: 0 0 4px 0;
     }
-
     .price {
       font-size: 1rem;
       color: ${({ theme }) => theme.color.secondary};
