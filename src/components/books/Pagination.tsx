@@ -1,26 +1,22 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Pagination as IPagination } from '../../models/pagination.model';
-import { LIMIT } from '../../constants/pagination';
+
 import Button from '../common/Button';
+import { LIMIT } from '../../constants/pagination';
 import { useSearchParams } from 'react-router-dom';
 import { QUERYSTRING } from '../../constants/querystring';
 
-interface IPaginationProps {
+interface Props {
   pagination: IPagination;
 }
 
-const Pagination: React.FC<IPaginationProps> = ({
-  pagination,
-}: IPaginationProps) => {
+const Pagination = ({ pagination }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { totalBooks, currentPage } = pagination;
-
   const pages: number = Math.ceil(totalBooks / LIMIT);
 
   const handleClickPage = (page: number) => {
     const newSearchParams = new URLSearchParams(searchParams);
-
     newSearchParams.set(QUERYSTRING.PAGE, page.toString());
 
     setSearchParams(newSearchParams);
@@ -33,11 +29,11 @@ const Pagination: React.FC<IPaginationProps> = ({
           {Array(pages)
             .fill(0)
             .map((_, index) => (
-              <li key={index + 1}>
+              <li>
                 <Button
                   key={index}
-                  size={'small'}
-                  scheme={index + 1 == currentPage ? 'primary' : 'normal'}
+                  size='small'
+                  scheme={index + 1 === currentPage ? 'primary' : 'normal'}
                   onClick={() => handleClickPage(index + 1)}
                 >
                   {index + 1}
@@ -57,9 +53,9 @@ const PaginationStyle = styled.div`
   padding: 24px 0;
 
   ol {
-    list-style: none;
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    list-style: none;
     padding: 0;
     margin: 0;
   }

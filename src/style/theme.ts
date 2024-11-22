@@ -1,4 +1,5 @@
 export type ThemeName = 'light' | 'dark';
+
 export type ColorKey =
   | 'primary'
   | 'background'
@@ -10,9 +11,9 @@ export type HeadingSize = 'large' | 'medium' | 'small';
 export type ButtonSize = 'large' | 'medium' | 'small';
 export type ButtonScheme = 'primary' | 'normal' | 'like';
 export type LayoutWidth = 'large' | 'medium' | 'small';
-
+export type MediaQuery = 'mobile' | 'tablet' | 'desktop';
 interface Theme {
-  name: string; // ThemeName에서 string으로 변경
+  name: ThemeName;
   color: Record<ColorKey, string>;
   heading: {
     [key in HeadingSize]: {
@@ -39,15 +40,18 @@ interface Theme {
       [key in LayoutWidth]: string;
     };
   };
+  mediaQuery: {
+    [key in MediaQuery]: string;
+  };
 }
 
 export const light: Theme = {
   name: 'light',
   color: {
     primary: '#ff5800',
-    secondary: '#5f5f5f', // 소문자 `#5f5f5f` 유지
-    background: 'lightgray',
-    third: 'grin',
+    secondary: '#5F5F5F',
+    background: 'lightgrey',
+    third: 'green',
     border: 'grey',
     text: 'black',
   },
@@ -72,7 +76,7 @@ export const light: Theme = {
       padding: '0.5rem 1rem',
     },
     small: {
-      fontSize: '0.75rem', // 두 번째 코드 기반 추가
+      fontSize: '0.75rem',
       padding: '0.25rem 0.5rem',
     },
   },
@@ -100,6 +104,11 @@ export const light: Theme = {
       small: '320px',
     },
   },
+  mediaQuery: {
+    mobile: '(max-width: 768px)', // 768px 이하 에서 동작
+    tablet: '(max-width: 1024px)', // 1024 px 이하에서 동작
+    desktop: '(min-width: 1025px)', // 1025px 이상에서 동작
+  },
 };
 
 export const dark: Theme = {
@@ -108,8 +117,8 @@ export const dark: Theme = {
   color: {
     primary: 'coral',
     background: 'midnightblue',
-    secondary: 'darkblue', // 두 번째 코드 기반 수정
-    third: 'darkgreen', // 두 번째 코드 기반 수정
+    secondary: 'darkblue',
+    third: 'darkgreen',
     border: 'grey',
     text: 'black',
   },
